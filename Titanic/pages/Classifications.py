@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt # type: ignore
+import seaborn as sns # type: ignore
 from sklearn.linear_model import LogisticRegression, Lasso
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -17,13 +18,9 @@ st.write("""
 ## Disclaimer
 
 I have learned a lot throughout this project. One of the things that I have learned is that 
-
 the regressions that I have used are not necessarily helpful when trying to determine the
-        
 accuracy of a model. However, I still found them helpful in getting a better understanding of how 
-
 regressions and classification work together and what they can do seperately.
-
 """)
 
 # Load the passenger data
@@ -76,4 +73,40 @@ accuracy = accuracy_score(y_test, predictions)
 st.subheader("Random Forest")
 st.write(f'Model Accuracy: {accuracy:.2f}')
 
+st.write("""
+---
+## Filters
 
+I wanted to add more to this page, so I thought that I would add ways to manipulate and 
+filter the data. Being able to filter the data is essential for being able to understand 
+which demographics suffered the most.
+         
+""")
+
+data = pd.read_csv('passengers.csv')
+
+# Passenger Class Filter
+st.sidebar.header('Filter by Passenger Class')
+# User can select multiple classes
+selected_classes = st.sidebar.multiselect('Passenger Class', options=data['Pclass'].unique(), default=data['Pclass'].unique())
+
+# Age Range Filter
+st.sidebar.header('Filter by Age Range')
+# User can select age range with a slider
+min_age, max_age = int(data['Age'].min()), int(data['Age'].max())
+age_range = st.sidebar.slider('Age Range', min_value=min_age, max_value=max_age, value=(min_age, max_age))
+
+# Apply filters
+filtered_data = data[(data['Pclass'].isin(selected_classes)) & (data['Age'] >= age_range[0]) & (data['Age'] <= age_range[1])]
+
+# Display filtered data (you can replace this part with any visualization or data display)
+st.header('Filtered Data Overview')
+st.write(f"Number of passengers after applying filters: {len(filtered_data)}")
+st.write(filtered_data)
+
+# Example Visualization: Age Distribution of Filtered Data
+st.header('Age Distribution of Filtered Passengers')
+fig, ax = plt.subplots()
+sns.histplot(filtered_data, x='Age', bins=20, kde=True, ax=ax)
+ax.set_title('Age Distribution')
+st.pyplot(fig)
