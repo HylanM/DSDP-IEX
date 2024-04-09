@@ -1,8 +1,16 @@
-FROM jupyter/datascience-notebook:latest
-WORKDIR /home/jovyan/work
-COPY . /home/jovyan/work/
-EXPOSE 8888
-CMD ["start-notebook.sh", "--NotebookApp.token=''"]
+FROM python:3.12
 
-# docker build -t housing-project .
-# docker run -p 8888:8888 --name housing1 housing-project
+# Working directory
+WORKDIR /app
+
+# Copy files
+COPY . /app
+
+# Install dependencies
+RUN pip install -r requirements.txt
+
+# Expose the Streamlit port
+EXPOSE 8501
+
+# Command to run the Streamlit app
+CMD ["streamlit", "run", "Housing_app.py", "--server.port=8501", "--server.address=0.0.0.0"]
