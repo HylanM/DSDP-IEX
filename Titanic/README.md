@@ -9,12 +9,12 @@ Hello! This Streamlit application runs through Docker and shows the classificati
 **1. Requirements**
 
 * Python 3.12
-* Streamlit (`pip install streamlit`)
-* Pandas (`pip install pandas`)
-* Numpy (`pip install numpy`)
-* Matplotlib (`pip install matplotlib`)
-* Seaborn (`pip install seaborn`) - visualizations
-* Scikit-learn (`pip install scikit-learn`)
+* Streamlit (pip install streamlit)
+* Pandas (pip install pandas)
+* Numpy (pip install numpy)
+* Matplotlib (pip install matplotlib)
+* Seaborn (pip install seaborn) 
+* Scikit-learn (pip install scikit-learn)
 
 **2. Running with Docker**
 
@@ -32,13 +32,25 @@ Hello! This Streamlit application runs through Docker and shows the classificati
 
 Open http://localhost:8501 in your web browser to access the Streamlit app.
 
+**3. What to Expect**
+This project included two pages, the first one is called classifications and has the models that were used for classifying the data. This page also has method of filtering the data as seen below. 
+
+![filter1](Pictures/filter1.png)
+
+In addition, to being able to filter the general data, there is also a way to filter by age. 
+
+![filterage](Pictures/filterage.png)
+
+The second page is titled visualization. A few of the visualizations that you can expect to find are class, age, gender, fares and embarkation. These visuals help provide an indepth understanding of what traits may have improved an individuals chance of surivial 
+
+![embark](Pictures/embark.png)
 
 ## Conclusions
 
-* First Class Passengers had a higher chance of survival.
+* Individuals that embarked from cherbourg France had the highest rate of survival.
 
-* Women and children had a higher chance of survival.
+* individuals that boarded at Southhamptons, UK had the lowest survival rate
 
-* Survival chance decreased with age.
+* Younger people had a higher rate of survival 
 
-* The higher the fare that was paid, the better chance of survival. 
+* The more money that was spent on the ticket the more likely that person was to survive 
