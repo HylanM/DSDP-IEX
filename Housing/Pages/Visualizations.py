@@ -12,14 +12,11 @@ def load_data():
 
 housing_data = load_data()
 
-# Setting Streamlit's page configuration (optional)
-st.set_page_config(page_title="Housing Data Analysis", layout="wide")
-
 # Streamlit app title
-st.title("Housing Data Visualizations")
+st.header("Housing Data Visualizations")
 
 # Setting the aesthetic style of the plots
-sns.set(style="whitegrid")
+sns.set_theme(style="whitegrid")
 
 # Price Distribution
 st.subheader("Price Distribution")

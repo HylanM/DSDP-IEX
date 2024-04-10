@@ -10,6 +10,9 @@ def load_data():
     return data
 housing_data = load_data()
 
+# Streamlit app title
+st.header("Housing Data Filters")
+
 # Streamlit sidebar for filters
 st.sidebar.header('Filters')
 
