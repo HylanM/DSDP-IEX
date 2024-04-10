@@ -15,7 +15,6 @@ st.divider()
 
 st.image("Pictures/current_titanic.png")
 st.caption("This picture is what the titanic currently looks like")
-st.divider()
 
 st.write("""
 ***
@@ -33,7 +32,6 @@ st.divider()
 
 st.image("Pictures/jack_rose.png")
 st.caption("Jack and Rose from the famous Titanic movie")
-st.divider()
 
 st.write("""
 ---
