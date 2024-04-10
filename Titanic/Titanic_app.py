@@ -11,6 +11,11 @@ st.write("""
 
 **Source:** [Kaggle](https://www.kaggle.com/c/titanic/data)
 """)
+st.divider()
+
+st.image("Pictures/current_titanic.png")
+st.caption("This picture is what the titanic currently looks like")
+st.divider()
 
 st.write("""
 ***
@@ -24,6 +29,11 @@ resulting in the death of 1502 out of 2224 passengers and crew.While there was s
 For this project, I used several different types of classification and visualization models to convey the data. 
 
 """)
+st.divider()
+
+st.image("Pictures/jack_rose.png")
+st.caption("Jack and Rose from the famous Titanic movie")
+st.divider()
 
 st.write("""
 ---
