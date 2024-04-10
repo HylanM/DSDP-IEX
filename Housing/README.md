@@ -43,14 +43,13 @@ In addition, the second page is called Visualization.
 
 A few of the visualizations that you can expect to find is the area of the house compared to cost, as seen above and the number of bedrooms in the house. These visuals help exmaine the individual impact that different characters have on the cost of a house
 
-![embark](Pictures/embark.png)
+![visual2](Pictures/visual2.png)
 
 ## Conclusions
 
-* Individuals that embarked from cherbourg France had the highest rate of survival.
+* The biggest impact of price was the number of bedrooms 
 
-* individuals that boarded at Southhamptons, UK had the lowest survival rate
+* There are outliers in the dataset
 
-* Younger people had a higher rate of survival 
-
-* The more money that was spent on the ticket the more likely that person was to survive 
+* Having the house pre-furnished did not have as big an impact on the price as orginally assumed 
+ 
