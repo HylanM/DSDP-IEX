@@ -2,6 +2,31 @@ import streamlit as st
 import pandas as pd
 import seaborn as sns # type: ignore
 import matplotlib.pyplot as plt # type: ignore
+from sklearn.model_selection import learning_curve
+from sklearn.pipeline import Pipeline
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.compose import ColumnTransformer
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+import numpy as np
+
+# Load the passenger data
+passengers = pd.read_csv('passengers.csv')
+passengers['Age'].fillna(value=round(passengers['Age'].mean()), inplace=True)
+
+passengers['FirstClass'] = passengers.Pclass.apply(lambda p: 1 if p == 1 else 0)
+passengers['SecondClass'] = passengers.Pclass.apply(lambda p: 1 if p == 2 else 0)
+passengers['Sex_binary'] = passengers.Sex.map({"male": 0, "female": 1})
+
+features = passengers[['Age', 'FirstClass', 'SecondClass', 'Sex_binary']]
+target = passengers['Survived']
+
+X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.2, random_state=42)
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
 
 st.header("Visualizations")
 
@@ -94,3 +119,68 @@ ax.set_title('Number of Passengers by Embarkation Point')
 ax.set_xlabel('Embarkation Point')
 ax.set_ylabel('Number of Passengers')
 st.pyplot(fig)
+
+
+# Preprocess data
+passengers['Age'].fillna(passengers['Age'].mean(), inplace=True)
+X = passengers[['Age', 'Pclass', 'Sex']]
+y = passengers['Survived']
+
+# Define pipeline
+numeric_features = ['Age']
+numeric_transformer = Pipeline(steps=[
+    ('imputer', SimpleImputer(strategy='mean')),
+    ('scaler', StandardScaler())
+])
+
+categorical_features = ['Pclass', 'Sex']
+categorical_transformer = Pipeline(steps=[
+    ('imputer', SimpleImputer(strategy='constant', fill_value='missing')),
+    ('onehot', OneHotEncoder(handle_unknown='ignore'))
+])
+
+preprocessor = ColumnTransformer(
+    transformers=[
+        ('num', numeric_transformer, numeric_features),
+        ('cat', categorical_transformer, categorical_features)
+    ])
+
+pipeline = Pipeline(steps=[('preprocessor', preprocessor),
+                           ('classifier', LogisticRegression())])
+
+# Generate learning curve
+@st.cache
+def generate_learning_curve():
+    train_sizes, train_scores, test_scores = learning_curve(
+        estimator=pipeline, X=X, y=y, train_sizes=np.linspace(0.1, 1.0, 10),
+        cv=5, scoring='accuracy', n_jobs=-1)
+    return train_sizes, train_scores, test_scores
+
+train_sizes, train_scores, test_scores = generate_learning_curve()
+
+# Plot learning curve
+st.header("Learning Curve")
+plt.figure()
+plt.title("Learning Curve")
+plt.xlabel("Training Examples")
+plt.ylabel("Score")
+
+train_scores_mean = np.mean(train_scores, axis=1)
+train_scores_std = np.std(train_scores, axis=1)
+test_scores_mean = np.mean(test_scores, axis=1)
+test_scores_std = np.std(test_scores, axis=1)
+
+plt.grid()
+
+plt.fill_between(train_sizes, train_scores_mean - train_scores_std,
+                 train_scores_mean + train_scores_std, alpha=0.1,
+                 color="r")
+plt.fill_between(train_sizes, test_scores_mean - test_scores_std,
+                 test_scores_mean + test_scores_std, alpha=0.1, color="g")
+plt.plot(train_sizes, train_scores_mean, 'o-', color="r",
+         label="Training score")
+plt.plot(train_sizes, test_scores_mean, 'o-', color="g",
+         label="Cross-validation score")
+
+plt.legend(loc="best")
+st.pyplot(plt)
