@@ -1,5 +1,9 @@
 import streamlit as st
 import pandas as pd
+#######ATTEMPT AT PIPELINE###########
+from sklearn.pipeline import Pipeline
+from sklearn.impute import SimpleImputer
+#######ATTEMPT AT PIPELINE###########
 import matplotlib.pyplot as plt # type: ignore
 import seaborn as sns # type: ignore
 from sklearn.linear_model import LogisticRegression, Lasso
@@ -9,6 +13,7 @@ from sklearn.metrics import accuracy_score, mean_squared_error
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import RandomForestRegressor
 import numpy as np
+from sklearn.model_selection import cross_val_score
 
 st.header("Classifications")
 st.divider()
@@ -39,6 +44,31 @@ scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
 
+
+
+#######ATTEMPT AT PIPELINE###########
+# Define preprocessing and modeling pipeline
+pipeline = Pipeline([
+    ('imputer', SimpleImputer(strategy='mean')),  # Impute missing values with mean
+    ('scaler', StandardScaler()),  # Standardize features
+    ('classifier', LogisticRegression())  # Logistic Regression model
+])
+# Fit pipeline
+pipeline.fit(X_train, y_train)
+
+# Make predictions
+predictions = pipeline.predict(X_test)
+accuracy = accuracy_score(y_test, predictions)
+#######ATTEMPT AT PIPELINE###########
+
+###__if the cross val didn't work try switching the variables x and y)
+# Perform cross-validation
+cv_scores = cross_val_score(pipeline, X_test_scaled, y_test, cv=5)  # 5-fold cross-validation
+# Display results
+st.header("Cross-Validation Results")
+st.write("Mean Accuracy: {:.2f}".format(cv_scores.mean()))
+st.write("Standard Deviation of Accuracy: {:.2f}".format(cv_scores.std()))
+
 # Logistic Regression
 model = LogisticRegression()
 model.fit(X_train_scaled, y_train)
@@ -46,6 +76,9 @@ predictions = model.predict(X_test_scaled)
 accuracy = accuracy_score(y_test, predictions)
 st.subheader("Logistic Regression")
 st.write(f'Model Accuracy: {accuracy:.2f}')
+# Report accuracy with standard deviation
+mean_accuracy = cv_scores.mean()
+std_accuracy = cv_scores.std()
 
 # Lasso Regression
 lasso_model = Lasso()

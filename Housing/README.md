@@ -53,3 +53,6 @@ A few of the visualizations that you can expect to find is the area of the house
 
 * Having the house pre-furnished did not have as big an impact on the price as orginally assumed 
  
+
+cd housing
+ docker run -p 8501:8501 my_housing_app
