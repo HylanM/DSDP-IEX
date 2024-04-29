@@ -10,6 +10,7 @@ from sklearn.compose import ColumnTransformer
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 import numpy as np
+from sklearn.model_selection import train_test_split, GridSearchCV
 
 # Load the passenger data
 passengers = pd.read_csv('passengers.csv')
@@ -184,3 +185,58 @@ plt.plot(train_sizes, test_scores_mean, 'o-', color="g",
 
 plt.legend(loc="best")
 st.pyplot(plt)
+
+# Define the classifier
+classifier = Pipeline(steps=[('preprocessor', preprocessor),
+                              ('classifier', LogisticRegression())])
+
+# Preprocess data
+passengers['Age'].fillna(passengers['Age'].mean(), inplace=True)
+passengers['FirstClass'] = passengers.Pclass.apply(lambda p: 1 if p == 1 else 0)
+passengers['SecondClass'] = passengers.Pclass.apply(lambda p: 1 if p == 2 else 0)
+X = passengers[['Age', 'FirstClass', 'SecondClass', 'Sex']]
+y = passengers['Survived']
+
+# Split data into train and test sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Define pipeline
+numeric_features = ['Age']
+numeric_transformer = Pipeline(steps=[
+    ('imputer', SimpleImputer(strategy='mean')),
+    ('scaler', StandardScaler())
+])
+
+categorical_features = ['FirstClass', 'SecondClass', 'Sex']
+categorical_transformer = Pipeline(steps=[
+    ('onehot', OneHotEncoder(drop='first'))  # Drop first column to avoid multicollinearity
+])
+
+preprocessor = ColumnTransformer(
+    transformers=[
+        ('num', numeric_transformer, numeric_features),
+        ('cat', categorical_transformer, categorical_features)
+    ])
+
+pipeline = Pipeline(steps=[('preprocessor', preprocessor),
+                           ('classifier', LogisticRegression())])
+
+# Parameter grid for GridSearch
+param_grid = {
+    'classifier__C': [0.001, 0.01, 0.1, 1, 10, 100],
+    'classifier__solver': ['liblinear', 'lbfgs']
+}
+
+# Perform GridSearch
+grid_search = GridSearchCV(pipeline, param_grid, cv=5)
+grid_search.fit(X_train, y_train)
+
+# Display results
+st.write("## GridSearch Results")
+st.write("Best parameters found:")
+st.write(grid_search.best_params_)
+st.write("Best score on training data:", grid_search.best_score_)
+
+# Evaluate on test set
+test_score = grid_search.score(X_test, y_test)
+st.write("Accuracy on test set:", test_score)
