@@ -45,6 +45,11 @@ A few of the visualizations that you can expect to find is the area of the house
 
 ![visual2](Pictures/visual2.png)
 
+**4. Input welcome** 
+Part of the assignment for this project was to implement a validation curve for the housing project. Despite my best efforts and AI, I wasn't able to get my validation code to work. I have included a picture of my code to see if anyone could find the error!
+
+[CVE](Pictures/CVE.png)
+
 ## Conclusions
 
 * The biggest impact of price was the number of bedrooms 

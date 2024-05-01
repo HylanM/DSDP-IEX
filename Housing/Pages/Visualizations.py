@@ -72,37 +72,3 @@ ax4.set_xlabel('Main Road Access')
 ax4.set_ylabel('Price')
 st.pyplot(fig4)
 
-# Cross-validation
-st.subheader("Cross-Validation")
-X = housing_data.drop(columns=['price'])  # Features
-y = housing_data['price']  # Target variable
-
-model = LinearRegression()
-cv_scores = cross_val_score(model, X, y, cv=5)  # 5-fold cross-validation
-st.write("Cross-Validation Scores:", cv_scores)
-st.write("Mean CV Score:", cv_scores.mean())
-
-# Set up data for validation curve
-X = housing_data.drop(columns=['price'])  # Features
-y = housing_data['price']  # Target variable
-alphas = np.logspace(-3, 3, 7)  # Varying values for regularization strength
-
-# Create validation curve
-train_scores, valid_scores = validation_curve(
-    Ridge(), X, y, param_name="alpha", param_range=alphas, cv=5
-)
-
-# Plot validation curve
-plt.figure()
-plt.semilogx(alphas, np.mean(train_scores, axis=1), label='Training score', color='blue')
-plt.semilogx(alphas, np.mean(valid_scores, axis=1), label='Validation score', color='red')
-plt.fill_between(alphas, np.mean(train_scores, axis=1) - np.std(train_scores, axis=1),
-                 np.mean(train_scores, axis=1) + np.std(train_scores, axis=1), alpha=0.2, color='blue')
-plt.fill_between(alphas, np.mean(valid_scores, axis=1) - np.std(valid_scores, axis=1),
-                 np.mean(valid_scores, axis=1) + np.std(valid_scores, axis=1), alpha=0.2, color='red')
-plt.title('Validation Curve')
-plt.xlabel('Alpha')
-plt.ylabel('Score')
-plt.legend(loc='best')
-plt.grid()
-st.pyplot(plt)

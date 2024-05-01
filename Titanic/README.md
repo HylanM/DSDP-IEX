@@ -45,6 +45,11 @@ The second page is titled visualization. A few of the visualizations that you ca
 
 ![embark](Pictures/embark.png)
 
+**4. Learning Curve**
+I have added a learning curve to my Titanic Dataset to show the difference between the training score and the cross validation score. 
+
+![LC](Pictures/LC.png)
+
 ## Conclusions
 
 * Individuals that embarked from cherbourg France had the highest rate of survival.
