@@ -5,6 +5,7 @@ import seaborn as sns # type: ignore
 from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import cross_val_score, GridSearchCV
 from sklearn.model_selection import cross_val_score
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import validation_curve
@@ -72,3 +73,12 @@ ax4.set_xlabel('Main Road Access')
 ax4.set_ylabel('Price')
 st.pyplot(fig4)
 
+# Grid Search for Ridge Regression
+param_grid = {'alpha': np.logspace(-3, 3, 7)}  # Define the range of hyperparameters to search
+ridge = Ridge()
+grid_search = GridSearchCV(ridge, param_grid, cv=5)  # 5-fold cross-validation
+grid_search.fit(housing_data[['area']], housing_data['price'])
+
+st.subheader("Grid Search Results for Ridge Regression")
+st.write("Best alpha parameter:", grid_search.best_params_)
+st.write("Best score:", grid_search.best_score_)
